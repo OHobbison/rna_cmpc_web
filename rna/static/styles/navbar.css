@@ -1,0 +1,11 @@
+.navbar {
+    padding: 5rem;
+}
+
+.navbar-brand {
+    font-size: 5rem;
+}
+
+.nav-item {
+    margin-right: 5rem;
+}

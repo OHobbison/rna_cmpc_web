@@ -1,0 +1,192 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div id="wrapper">
+    {% include "side_bar.html" %}
+    <!-- header modificada -  -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            {% include "top_bar.html" %}
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Conteúdo -->
+                <div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div>
+                                <strong>{{message|safe}}</strong>
+                            </div>
+                        {% endfor%}
+                    {% else %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="files" class="custom-file-input form-control-file" multiple>
+                                    <label class="custom-file-label">Escolher arquivo</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>
+                        </form>
+                        <script>
+
+                        </script>
+                    {% endif %} 
+                </div>
+                <div>
+                    {% if data_count is None %}
+                        mostrar algo se n tiver csv
+                    {% else %}
+                        {% if data_count|length == 1 %}
+                            <div class="alert alert-danger" role="alert">
+                                Você precisa fazer upload de ao menos 1 arquivo
+                            </div>
+                        {% else %}
+                            <!-- BOTOES -->
+                            <div class="d-flex justify-content-center">
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn-primary btn-sm my-button" name=>Aplicar RNA python</button>
+                                    <button type="button" class="btn btn-primary btn-sm my-button">Aplicar RNA R</button>
+                                </form>
+                            </div>  
+                            <!-- FIM BOTOES -->
+                            
+                            <!-- TABELA DE TOTAIS -->
+                            <table class="table mx-auto">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="padding: 5px;">Id hub</th>
+                                    <th scope="col" style="padding: 5px;">Medições</th>
+                                    <th scope="col" style="padding: 5px;">Parcelas</th>
+                                    <th scope="col" style="padding: 5px;">Projetos</th>
+                                    <th scope="col" style="padding: 5px;">Talhões</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in data_count|slice:":10" %}
+                                <tr>
+                                    <td style="padding: 5px;">{{row.CD_PROC_IMPORTA_HUB}}</td>
+                                    <td style="padding: 5px;">{{row.CD_MEDICAO}}</td>
+                                    <td style="padding: 5px;">{{row.CD_MEDICAO_PARCELA}}</td>
+                                    <td style="padding: 5px;">{{row.ID_PROJETO}}</td>
+                                    <td style="padding: 5px;">{{row.CD_TALHAO}}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- FIM TABELA DE TOTAIS -->
+                            <hr>
+                            <!-- COLLAPSE -->
+                            <p>
+                                <a class="btn btn-primary mr-2" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Projetos | Talhões</a>
+                            </p>
+                            <div class="collapse multi-collapse in" id="multiCollapseExample1" style="max-width: auto;">
+                                <div class="card card-body">
+                                {% for i in projeto_talhao %}
+                                    {{i}} |
+                                {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="slideshow-container">
+                                {% for plot in plots %}    
+                                <div class="mySlides fade">
+                                    <div class="numbertext"></div>
+                                        <img src="data:image/png;base64,{{ plot }}" style="width:100%" />
+                                    </div>
+                                
+                            
+                                
+                                <a class="prev" onclick="plusSlides(-1)">❮</a>
+                                <a class="next" onclick="plusSlides(1)">❯</a>
+                                {% endfor %}
+                                
+                            </div>
+                            
+                            <br>
+                                
+                            <div style="text-align:center">
+                            {% for plot in plots %}
+                                <span class="dot" onclick="currentSlide({{forloop.counter}})"></span> 
+                            {% endfor %}
+                            </div>
+                            
+                            <script>
+                                let slideIndex = 1;
+                                showSlides(slideIndex);
+
+                                function plusSlides(n) {
+                                showSlides(slideIndex += n);
+                                }
+
+                                function currentSlide(n) {
+                                showSlides(slideIndex = n);
+                                }
+
+                                function showSlides(n) {
+                                let i;
+                                let slides = document.getElementsByClassName("mySlides");
+                                let dots = document.getElementsByClassName("dot");
+                                if (n > slides.length) {slideIndex = 1}    
+                                if (n < 1) {slideIndex = slides.length}
+                                for (i = 0; i < slides.length; i++) {
+                                    slides[i].style.display = "none";  
+                                }
+                                for (i = 0; i < dots.length; i++) {
+                                    dots[i].className = dots[i].className.replace(" active", "");
+                                }
+                                slides[slideIndex-1].style.display = "block";  
+                                dots[slideIndex-1].className += " active";
+                                }
+                            
+                            </script>
+                            
+                            <style>
+                                
+                                
+
+                            
+                            </style>
+                        
+                        {% endif %}
+                      
+                    {% endif %}
+                </div>
+                
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- fim header modificada -->
+    <!-- upload csv -->
+
+
+</div>
+
+
+{% endblock content %}
